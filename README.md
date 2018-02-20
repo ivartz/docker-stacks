@@ -1,4 +1,8 @@
 # docker-stacks
+A fork from:
+https://github.com/jupyter/docker-stacks/tree/master/all-spark-notebook
+with a modified all-spark-notebook for cooperating with SHODAN, Software from NTNU Cyborg
+https://github.com/PeterAaser/SHODAN
 
 [![Build Status](https://travis-ci.org/jupyter/docker-stacks.svg?branch=master)](https://travis-ci.org/jupyter/docker-stacks)
 [![Join the chat at https://gitter.im/jupyter/jupyter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jupyter/jupyter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -34,8 +38,52 @@ docker run -d -P jupyter/<your desired stack>:<git-sha-tag>
 If this is your first time using Docker or any of the Jupyter projects, do the following to get started.
 
 1. [Install Docker](https://docs.docker.com/installation/) on your host of choice.
+Preferably Docker CE.
+
+Since docker binds to a Unix socket, 
+it needs to run as root.
+The easiest is to run docker with sudo.
+
+(start, Optional)
+For running docker as non root,
+your user needs to be added to the
+docker group:
+```bash
+# Create a group called docker:
+sudo groupadd docker
+
+# add your user to the group docker
+sudo usermod -aG docker $USER
+# a log out and log in is necessary to re-evaluate user memberships.
+# Since you don't want to do this, a workaround is 
+(https://superuser.com/questions/272061/reload-a-linux-users-group-assignments-without-logging-out)
+# Get the id of your current group, remember it
+id -g
+# switch to the docker group as primary for your user
+newgrp docker
+# switch back to the original group, using the group id 
+# previously returned by id -g. In my case, it was
+newgrp 1001
+# Now you can finally run docker as non root without a re-login
+```
+(end, optional)
+
 2. Open the README in one of the folders in this git repository.
 3. Follow the README for that stack.
+
+For running the modified all-spark-notebook:
+- Clone the repository and cd to the all-spark-notebook directory
+```bash
+git clone https://github.com/ivartz/docker-stacks
+cd all-spark-notebook
+```
+- Build a docker image called datascience_container
+based on the file Dockerfile
+```bash
+docker build -t datascience_container .
+# run the container
+docker run --user root -e NB_UID=1001 -e NB_GID=1001 -e GRANT_SUDO=yes -v /home/loek/.jupyter:/etc/ssl/notebook -v /media/loek/HD/Cyborg:/home/jovyan/work -p 9999:8888 datascience_container start-notebook.sh --NotebookApp.keyfile=/etc/ssl/notebook/mycert.pem --NotebookApp.certfile=/etc/ssl/notebook/mycert.pem --NotebookApp.password='sha1:832eed7478e2:4f26774c296b0cb8fa950c11edc8a42e43ead533'
+```
 
 ## Visual Overview
 
