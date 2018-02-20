@@ -48,3 +48,25 @@ RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     rm -rf /home/$NB_USER/.local && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
+    
+# custom settings
+# Dependencies for SHODAN: jdk, nodejs, SBT, scala
+ENV SBT_VERSION 1.1.0
+RUN apt-get install -y openjdk-8-jdk && \
+    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+    apt-get install -y nodejs && \
+    curl -L -o sbt-$SBT_VERSION.deb \
+    http://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
+    dpkg -i sbt-$SBT_VERSION.deb && \
+    rm sbt-$SBT_VERSION.deb && \
+    apt-get install -y sbt scala && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# various tools
+RUN apt-get install -y tmux htop rsync git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# communication with ligthning plotting server
+EXPOSE 30000
