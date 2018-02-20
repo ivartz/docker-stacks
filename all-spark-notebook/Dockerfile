@@ -35,10 +35,13 @@ RUN apt-get install -y openjdk-8-jdk && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# communication with ligthning plotting server
-EXPOSE 30000
-
 USER $NB_UID
+
+# ligthtning plotting server
+RUN npm install -g lightning-server
+
+# communication with ligthning plotting server
+EXPOSE 3000
 
 # R packages
 RUN conda install --quiet --yes \
