@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 FROM jupyter/pyspark-notebook
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Ivar Thokle Hovden <djloek@gmail.com>"
 
 USER root
 
@@ -102,12 +102,16 @@ RUN sudo chmod +x start-lightning-server.sh
 # temporarily start postgresql server in order
 # to temporarily start lightning server in order
 # to have lightning-scala pass its tests
+# install the scala client for use with spark
+# by copy the jar into the spark jar library.
+# The client should now work as long as spark and lightning-server works
 RUN bash start-lightning-server.sh && \
     git clone https://github.com/ivartz/lightning-scala && \
     cd lightning-scala && \
     git reset --hard 82fc384d331589f9835c81cbeb2abd27142efa33 && \
     sbt assembly && \
-    cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar target/scala-2.11/lsa.jar
+    cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar target/scala-2.11/lsa.jar && \
+    sudo cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar /usr/local/spark-2.2.0-bin-hadoop2.7/jars/
 
 # lightning python client
 RUN pip install lightning-python
