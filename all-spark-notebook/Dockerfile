@@ -159,3 +159,9 @@ ADD start-notebook-custom.sh start-notebook-custom.sh
 RUN sudo chown jovyan start-notebook-custom.sh && \
     chmod +x start-notebook-custom.sh
 
+# add lanuch all script
+ADD start-all.sh start-all.sh
+RUN sudo chown jovyan start-all.sh && \
+    chmod +x start-all.sh
+
+
