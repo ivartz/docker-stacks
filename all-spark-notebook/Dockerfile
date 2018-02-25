@@ -113,8 +113,8 @@ RUN bash start-lightning-server.sh && \
     cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar target/scala-2.11/lsa.jar && \
     sudo cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar /usr/local/spark-2.2.0-bin-hadoop2.7/jars/
 
-# lightning python client
-RUN pip install lightning-python
+# update pip + install lightning python client
+RUN pip install --upgrade pip lightning-python
 
 # R packages
 RUN conda install --quiet --yes \
@@ -128,8 +128,17 @@ RUN conda install --quiet --yes \
     fix-permissions /home/$NB_USER
 
 # Apache Toree kernel
+#RUN pip install --no-cache-dir \
+#    https://dist.apache.org/repos/dist/dev/incubator/toree/0.2.0/snapshots/dev1/toree-pip/toree-0.2.0.dev1.tar.gz \
+#    && \
+#    jupyter toree install --sys-prefix && \
+#    rm -rf /home/$NB_USER/.local && \
+#    fix-permissions $CONDA_DIR && \
+#    fix-permissions /home/$NB_USER
+
+# Apache Toree kernel. Attempt to update to most recent version (2018-02-25)
 RUN pip install --no-cache-dir \
-    https://dist.apache.org/repos/dist/dev/incubator/toree/0.2.0/snapshots/dev1/toree-pip/toree-0.2.0.dev1.tar.gz \
+    https://github.com/apache/incubator-toree/archive/v0.2.0-incubating-rc3.tar.gz \
     && \
     jupyter toree install --sys-prefix && \
     rm -rf /home/$NB_USER/.local && \
