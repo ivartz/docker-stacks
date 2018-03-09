@@ -6,5 +6,5 @@ workdir=/media/loek/HD/Cyborg
 docker build -t datascience_container .
 
 # run it
-docker run -ti --rm --user root -e NB_UID=$(id -u $USER) -e NB_GID=$(id -g $USER) -e GRANT_SUDO=yes -v $workdir:/home/jovyan/work -p 20000:8888 -p 3000:3000 datascience_container start.sh bash start-all.sh
+docker run -ti --rm --user root -e NB_UID=$(id -u $USER) -e NB_GID=$(id -g $USER) -e GRANT_SUDO=yes -e SPARK_OPTS="--driver-memory 2G" -v $workdir:/home/jovyan/work -p 20000:8888 -p 3000:3000 datascience_container start.sh bash start-all.sh
 
