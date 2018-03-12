@@ -113,6 +113,13 @@ RUN bash start-lightning-server.sh && \
     cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar target/scala-2.11/lsa.jar && \
     sudo cp target/scala-2.11/lightning-scala-assembly-0.1.0-SNAPSHOT.jar /usr/local/spark-2.2.0-bin-hadoop2.7/jars/
 
+# install ScalaSignal, Signal Processing Library for Scala
+RUN git clone https://github.com/ivartz/scalasignal && \
+    cd scalasignal && \
+    git reset --hard 84b81878e3fcd8c72d3fdf0211c2320cd76efef1 && \
+    sbt clean compile test package && \
+    sudo cp target/scala-2.11/scalasignal_2.11-0.4-SNAPSHOT.jar /usr/local/spark-2.2.0-bin-hadoop2.7/jars/
+
 # update conda, pip and jupyter o newest versions
 #RUN conda update -y conda && \
 #    pip install --upgrade -y pip && \
@@ -159,6 +166,7 @@ RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     fix-permissions /home/$NB_USER
 
 # jupyter-scala kernel https://github.com/jupyter-scala/jupyter-scala
+# TODO: this scala version is 2.11.11, needs to be changed to 2.11.8
 RUN git clone https://github.com/jupyter-scala/jupyter-scala && \
     cd jupyter-scala && \
     git reset --hard 98bac7034f07e3e51d101846953aecbdb7a4bb5d && \
