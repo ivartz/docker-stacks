@@ -157,6 +157,12 @@ RUN pip install --no-cache-dir \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
+# Flask python web development
+RUN pip install Flask
+
+# lightning python client
+RUN pip install lightning-python
+
 # Spylon-kernel
 RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     conda clean -tipsy && \
